@@ -26,7 +26,7 @@ class GiteeVersionChecker {
   static setup(String currentVersion,
       {url = "", defaultDownloadPage = "", dailyTaskKey = ""}) {
     _url = url;
-    currentVersion = currentVersion;
+    GiteeVersionChecker.currentVersion = currentVersion;
     _defaultDownloadPage = defaultDownloadPage;
     _key_daily_task = dailyTaskKey;
   }
@@ -52,7 +52,8 @@ class GiteeVersionChecker {
     var currentVersionParsed = VersionParser.parse(currentVersion);
 
     var newestVersion = versionList.first;
-    if (newestVersion.getVersionParser() > currentVersionParsed) return newestVersion;
+    if (newestVersion.getVersionParser() > currentVersionParsed)
+      return newestVersion;
     return null;
   }
 
@@ -65,13 +66,13 @@ class GiteeVersionChecker {
     } else {
       NewVersionDialog.show("检测到新版本-${newVersion.versionName}", newVersion.desc,
           onOkPressed: () {
-        var downloadLink =
+            var downloadLink =
             newVersion.downloadLink == "" || newVersion.downloadLink == null
                 ? _defaultDownloadPage
                 : newVersion.downloadLink;
-        launchUrl(Uri.parse(downloadLink!),
-            mode: LaunchMode.externalApplication);
-      }, okString: "去更新");
+            launchUrl(Uri.parse(downloadLink!),
+                mode: LaunchMode.externalApplication);
+          }, okString: "去更新");
     }
   }
 
