@@ -33,7 +33,15 @@ class GiteeVersionChecker {
 
   /// 为空代表没有新版本
   static Future<Version?> fetchNewVersion() async {
-    var result = await _get(_url);
+    var result = null;
+    try {
+      result = await _get(_url);
+    } catch (e) {
+      if (e is DioError) {
+        SmartDialog.showToast(e.message);
+      } else {}
+      return null;
+    }
     var platform = "win";
     if (Platform.isAndroid) {
       platform = "android";
@@ -66,13 +74,13 @@ class GiteeVersionChecker {
     } else {
       NewVersionDialog.show("检测到新版本-${newVersion.versionName}", newVersion.desc,
           onOkPressed: () {
-            var downloadLink =
+        var downloadLink =
             newVersion.downloadLink == "" || newVersion.downloadLink == null
                 ? _defaultDownloadPage
                 : newVersion.downloadLink;
-            launchUrl(Uri.parse(downloadLink!),
-                mode: LaunchMode.externalApplication);
-          }, okString: "去更新");
+        launchUrl(Uri.parse(downloadLink!),
+            mode: LaunchMode.externalApplication);
+      }, okString: "去更新");
     }
   }
 
